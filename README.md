@@ -163,3 +163,65 @@
     </loggers>
 </configuration>
 ```
+
+# 3 IOC 容器
+- IOC 容器是Spring框架的核心，它提供了对象实例化的功能，对象实例化后，对象之间的依赖关系由容器来维护。
+- Spring 通过 IOC 容器来管理所有对象的实例化和初始化,控制对象与对象之间的依赖关系
+- 我们将由 IOC 容器管理的对象称为 Spring Bean 它与使用关键字 new 创建的对象没有任何区别
+- ![02-IoC容器.png](02-IoC%E5%AE%B9%E5%99%A8.png)
+
+## 3.1 IOC 基于 XML 管理 Bean
+```xml
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd">
+
+    <!--User 对象创建-->
+    <bean id="user" class="com.atguigu.spring6.iocxml.User"></bean>
+</beans>
+```
+### 3.1.1 搭建子模块spring6-ioc-xml
+### 3.1.2 实验一:获取bean
+```java
+package com.atguigu.spring6.iocxml;
+import org.springframework.context.support.ClassPathXmlApplicationContext;
+
+/**
+ * @Author: Admin
+ * @Create: 2024/7/4 - 上午10:03
+ * @Version: v1.0
+ * ClassName: TestUser
+ * Package: com.atguigu.spring6.iocxml
+ * Description: 描述
+ */
+public class TestUser {
+
+   public static void main(String[] args){
+       ClassPathXmlApplicationContext context = new ClassPathXmlApplicationContext("bean.xml");
+       // 根据 id 获取 bean
+       User user = context.getBean("user", User.class);
+       System.out.println(user);
+
+       // 根据类型获取 bean
+       User user1 = context.getBean(User.class);
+       System.out.println(user1);
+
+       // 根据 id 和类型获取 bean
+       User user2 = context.getBean("user", User.class);
+       System.out.println(user2);
+   }
+}
+```
+### 3.1.3 实验二:依赖注入之setter注入
+### 3.1.4 实验三:依赖注入之构造器注入
+### 3.1.5 实验四:特殊值处理
+### 3.1.6 实验五:为对象类型属性赋值
+### 3.1.7 实验六:为数组类型属性赋值
+### 3.1.8 实验七:为集合类型属性赋值
+### 3.1.9 实验八:p命名空间
+### 3.1.10 实验九:引入外部属性文件
+### 3.1.11 实验十:bean的作用域
+### 3.1.12 实验十-:bean生命周期
+### 3.1.13 实验十二:FactoryBean
+### 3.1.14 实验十三:基于xml自动装配

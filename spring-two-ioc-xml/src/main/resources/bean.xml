@@ -3,6 +3,13 @@
        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
        xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd">
 
-    <!--User 对象创建-->
+    <!-- 1. 获取 bean 演示 User 对象创建-->
     <bean id="user" class="com.atguigu.spring6.iocxml.User"></bean>
+
+    <!--<bean id="user1" class="com.atguigu.spring6.iocxml.User"></bean>-->
+
+    <!-- 2. 一个接口实现类获取过程-->
+    <bean id="userDao" class="com.atguigu.spring6.iocxml.bean.UserDaoImpl"></bean>
+    <bean id="personDao" class="com.atguigu.spring6.iocxml.bean.PersonDaoImpl"></bean>
+
 </beans>

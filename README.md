@@ -247,6 +247,45 @@ public class TestUserDao {
 }
 ```
 ### 3.1.3 实验二:依赖注入之setter注入
+- 创建类,定义属性,生成属性 set 方法
+- 在 Spring 配置文件中配置
+```xml
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd">
+
+   <!--基于 set 方法注入-->
+   <bean id="book" class="com.atguigu.spring6.iocxml.di.Book">
+      <property name="name" value="java"/>
+      <property name="author" value="zhangsan"/>
+   </bean>
+</beans>
+```
+```java
+package com.atguigu.spring6.iocxml.di;
+import org.junit.jupiter.api.Test;
+import org.springframework.context.support.ClassPathXmlApplicationContext;
+/**
+ * @Author: Admin
+ * @Create: 2024/7/5 - 上午10:03
+ * @Version: v1.0
+ * ClassName: TestDiBook
+ * Package: com.atguigu.spring6.iocxml.di
+ * Description: 描述
+ */
+public class TestDiBook {
+    @Test
+    public void testSet(){
+        // 加载配置文件
+        ClassPathXmlApplicationContext context = new ClassPathXmlApplicationContext("bean-di.xml");
+        // 根据 id 和类型获取 bean
+        Book book = context.getBean("book", Book.class);
+        System.out.println(book);
+
+    }
+}
+```
 ### 3.1.4 实验三:依赖注入之构造器注入
 ### 3.1.5 实验四:特殊值处理
 ### 3.1.6 实验五:为对象类型属性赋值

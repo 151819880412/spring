@@ -1,5 +1,7 @@
 package com.atguigu.spring6.iocxml.ditest;
 
+import java.util.Arrays;
+
 /**
  * @Author: Admin
  * @Create: 2024/7/5 - 上午11:06
@@ -13,10 +15,12 @@ public class Emp {
     private String name;
     private Integer age;
     private Dept dept;
+    private String[] loves;
 
     public void work() {
         System.out.println(name + " " + age + " is working");
         dept.info();
+        System.out.println(Arrays.toString(loves));
     }
 
     public void setName(String name) {
@@ -29,6 +33,14 @@ public class Emp {
 
     public void setDept(Dept dept) {
         this.dept = dept;
+    }
+
+    public String[] getLoves() {
+        return loves;
+    }
+
+    public void setLoves(String[] loves) {
+        this.loves = loves;
     }
 
     public void setDeptName(String deptName) {

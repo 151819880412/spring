@@ -522,6 +522,32 @@ public class Emp {
 }
 ```
 ### 3.1.7 实验六:为数组类型属性赋值
+```xml
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd">
+    <!--注入数组类型的属性-->
+    <bean id="dept" class="com.atguigu.spring6.iocxml.ditest.Dept">
+        <property name="deptName" value="开发部"></property>
+    </bean>
+    <bean id="emp" class="com.atguigu.spring6.iocxml.ditest.Emp">
+        <!--普通属性-->
+        <property name="name" value="张三"/>
+        <property name="age" value="18"/>
+        <!--对象类型属性-->
+        <property name="dept" ref="dept"/>
+        <!--数组类型属性-->
+        <property name="loves">
+            <array>
+                <value>football</value>
+                <value>basketball</value>
+                <value>swimming</value>
+            </array>
+        </property>
+    </bean>
+</beans>
+```
 ### 3.1.8 实验七:为集合类型属性赋值
 ### 3.1.9 实验八:p命名空间
 ### 3.1.10 实验九:引入外部属性文件

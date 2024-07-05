@@ -1,5 +1,7 @@
 package com.atguigu.spring6.iocxml.ditest;
 
+import java.util.List;
+
 /**
  * @Author: Admin
  * @Create: 2024/7/5 - 上午11:05
@@ -11,6 +13,7 @@ package com.atguigu.spring6.iocxml.ditest;
  */
 public class Dept {
     private String deptName;
+    private List<Emp> empList;
 
     public void setDeptName(String deptName) {
         this.deptName = deptName;
@@ -18,6 +21,16 @@ public class Dept {
 
     public void info() {
         System.out.println("部门名称：" + deptName);
+        for (Emp emp : empList) {
+            System.out.println(emp.getName() + " " + emp.getAge());
+        }
     }
 
+    public List<Emp> getEmpList() {
+        return empList;
+    }
+
+    public void setEmpList(List<Emp> empList) {
+        this.empList = empList;
+    }
 }

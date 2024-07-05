@@ -549,6 +549,31 @@ public class Emp {
 </beans>
 ```
 ### 3.1.8 实验七:为集合类型属性赋值
+```xml
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd">
+
+    <bean id="emp1" class="com.atguigu.spring6.iocxml.ditest.Emp">
+        <property name="name" value="张三"/>
+        <property name="age" value="18"/>
+    </bean>
+    <bean id="emp2" class="com.atguigu.spring6.iocxml.ditest.Emp">
+        <property name="name" value="李四"/>
+        <property name="age" value="20"/>
+    </bean>
+    <bean id="dept" class="com.atguigu.spring6.iocxml.ditest.Dept">
+        <property name="deptName" value="开发部"/>
+        <property name="empList">
+            <list>
+                <ref bean="emp1"/>
+                <ref bean="emp2"/>
+            </list>
+        </property>
+    </bean>
+</beans>
+```
 ### 3.1.9 实验八:p命名空间
 ### 3.1.10 实验九:引入外部属性文件
 ### 3.1.11 实验十:bean的作用域

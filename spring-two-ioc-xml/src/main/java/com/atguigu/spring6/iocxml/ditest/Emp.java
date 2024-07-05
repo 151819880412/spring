@@ -23,6 +23,18 @@ public class Emp {
         System.out.println(Arrays.toString(loves));
     }
 
+    public String getName() {
+        return name;
+    }
+
+    public Integer getAge() {
+        return age;
+    }
+
+    public Dept getDept() {
+        return dept;
+    }
+
     public void setName(String name) {
         this.name = name;
     }

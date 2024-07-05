@@ -287,9 +287,157 @@ public class TestDiBook {
 }
 ```
 ### 3.1.4 实验三:依赖注入之构造器注入
-- 
+```xml
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd">
+    <!--构造器和构造方法注入-->
+    <bean id="bookCon" class="com.atguigu.spring6.iocxml.di.Book">
+        <constructor-arg name="name" value="java"/>
+        <constructor-arg name="author" value="zhangsan"/>
+    </bean>
+</beans>
+```
+```java
+package com.atguigu.spring6.iocxml.di;
+import org.junit.jupiter.api.Test;
+import org.springframework.context.support.ClassPathXmlApplicationContext;
+/**
+ * @Author: Admin
+ * @Create: 2024/7/5 - 上午10:03
+ * @Version: v1.0
+ * ClassName: TestDiBook
+ * Package: com.atguigu.spring6.iocxml.di
+ * Description: 描述
+ */
+public class TestDiBook {
+    @Test
+    public void testSet(){
+        /*具体流程如下：
+            Spring 根据配置文件中 <bean> 元素的 class 属性找到 Book 类。
+            Spring 使用无参构造器实例化 Book 对象，这时会输出 "book无参构造器"。
+            Spring 调用 setName 和 setAuthor 方法注入 name 和 author 属性。*/
+        // 加载配置文件
+        ClassPathXmlApplicationContext context = new ClassPathXmlApplicationContext("bean-di.xml");
+        // 根据 id 和类型获取 bean
+        Book book = context.getBean("book", Book.class);
+        System.out.println(book);
+
+    }
+
+    @Test
+    public void testConstructor(){
+        /*具体流程如下：
+            Spring 根据配置文件中 <bean> 元素的 class 属性找到 Book 类。
+            Spring 使用有参构造器实例化 Book 对象，这时会输出 "book有参构造器"。
+            Spring 通过有参构造器注入 name 和 author 属性。*/
+        // 加载配置文件
+        ClassPathXmlApplicationContext context = new ClassPathXmlApplicationContext("bean-di.xml");
+        // 根据 id 和类型获取 bean
+        Book book = context.getBean("bookCon", Book.class);
+        System.out.println(book);
+
+    }
+}
+
+```
 ### 3.1.5 实验四:特殊值处理
+```xml
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd">
+    <!--基于 set 方法注入-->
+    <bean id="book" class="com.atguigu.spring6.iocxml.di.Book">
+        <property name="name" value="java"/>
+        <property name="author" value="zhangsan"/>
+        <!--        1. 空值处理-->
+        <!--        <property name="others" >-->
+        <!--        <null></null>-->
+        <!--        </property>-->
+
+        <!--        2. 空值处理-->
+        <!--        <property name="others" value="&lt;&gt;" />-->
+
+        <!--        3. CDATA 处理-->
+        <!--        <property name="others" >-->
+        <!--            <value>-->
+        <!--                <![CDATA[a<b]]>-->
+        <!--            </value>-->
+        <!--        </property>-->
+    </bean>
+
+</beans>
+```
 ### 3.1.6 实验五:为对象类型属性赋值
+- 引用外部 bean
+  - 创建 dept 和 emp 对象
+    ```java
+    package com.atguigu.spring6.iocxml.ditest;
+    public class Dept {
+        private String deptName;
+    
+        public void setDeptName(String deptName) {
+            this.deptName = deptName;
+        }
+    
+        public void info() {
+            System.out.println("部门名称：" + deptName);
+        }
+    }
+    ```
+    ```java
+    package com.atguigu.spring6.iocxml.ditest;
+    public class Emp {
+        private String name;
+        private Integer age;
+        private Dept dept;
+    
+        public void work() {
+            System.out.println(name + " " + age + " is working");
+            dept.info();
+        }
+    
+        public void setName(String name) {
+            this.name = name;
+        }
+    
+        public void setAge(Integer age) {
+            this.age = age;
+        }
+    
+        public void setDept(Dept dept) {
+            this.dept = dept;
+        }
+    }
+    ```
+  - 注入普通类型属性
+  - 在 emp 的 bean 标签中引用 dept 的 bean 标签
+    ```xml
+    <?xml version="1.0" encoding="UTF-8"?>
+    <beans xmlns="http://www.springframework.org/schema/beans"
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd">
+        <!--
+        方法1: 引入外部 bean
+            1. 创建两个类对象: dept 和 emp
+            2. 在 dept 和 emp 标签里面,使用 property 引入 dept 的 bean
+        -->
+        <bean id="dept" class="com.atguigu.spring6.iocxml.ditest.Dept">
+            <property name="deptName" value="开发部"/>
+        </bean>
+        <bean id="emp" class="com.atguigu.spring6.iocxml.ditest.Emp">
+            <!--普通属性注入 value -->
+            <property name="age" value="18"/>
+            <property name="name" value="张三"/>
+            <!--对象类型属性注入 ref="bean的id" -->
+            <property name="dept" ref="dept"/>
+        </bean>
+    </beans>
+    ```
+- 引用内部 bean
+- 级联属性赋值
 ### 3.1.7 实验六:为数组类型属性赋值
 ### 3.1.8 实验七:为集合类型属性赋值
 ### 3.1.9 实验八:p命名空间

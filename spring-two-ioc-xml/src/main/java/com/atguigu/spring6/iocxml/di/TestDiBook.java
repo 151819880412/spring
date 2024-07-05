@@ -1,9 +1,6 @@
 package com.atguigu.spring6.iocxml.di;
-
 import org.junit.jupiter.api.Test;
 import org.springframework.context.support.ClassPathXmlApplicationContext;
-
-import javax.swing.*;
 
 /**
  * @Author: Admin

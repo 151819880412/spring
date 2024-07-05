@@ -7,6 +7,20 @@
     <bean id="book" class="com.atguigu.spring6.iocxml.di.Book">
         <property name="name" value="java"/>
         <property name="author" value="zhangsan"/>
+        <!--        1. 空值处理-->
+        <!--        <property name="others" >-->
+        <!--        <null></null>-->
+        <!--        </property>-->
+
+        <!--        2. 空值处理-->
+        <!--        <property name="others" value="&lt;&gt;" />-->
+
+        <!--        3. CDATA 处理-->
+        <!--        <property name="others" >-->
+        <!--            <value>-->
+        <!--                <![CDATA[a<b]]>-->
+        <!--            </value>-->
+        <!--        </property>-->
     </bean>
     <!--构造器和构造方法注入-->
     <bean id="bookCon" class="com.atguigu.spring6.iocxml.di.Book">

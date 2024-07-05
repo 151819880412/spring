@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd">
+
+    <!--
+    方法1: 引入外部 bean
+        1. 创建两个类对象: dept 和 emp
+        2. 在 dept 和 emp 标签里面,使用 property 引入 dept 的 bean
+    -->
+    <bean id="dept" class="com.atguigu.spring6.iocxml.ditest.Dept">
+        <property name="deptName" value="开发部"/>
+    </bean>
+    <bean id="emp" class="com.atguigu.spring6.iocxml.ditest.Emp">
+        <!--普通属性注入 value -->
+        <property name="age" value="18"/>
+        <property name="name" value="张三"/>
+        <!--对象类型属性注入 ref="bean的id" -->
+        <property name="dept" ref="dept"/>
+    </bean>
+</beans>

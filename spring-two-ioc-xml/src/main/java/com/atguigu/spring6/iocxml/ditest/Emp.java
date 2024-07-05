@@ -30,4 +30,11 @@ public class Emp {
     public void setDept(Dept dept) {
         this.dept = dept;
     }
+
+    public void setDeptName(String deptName) {
+        if (this.dept != null) {
+            this.dept.setDeptName(deptName);
+        }
+    }
+
 }

@@ -19,4 +19,5 @@ public class Dept {
     public void info() {
         System.out.println("部门名称：" + deptName);
     }
+
 }

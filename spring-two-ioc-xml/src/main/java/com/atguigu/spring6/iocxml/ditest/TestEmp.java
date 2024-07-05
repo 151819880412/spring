@@ -15,7 +15,7 @@ public class TestEmp {
         // 加载配置文件
         ClassPathXmlApplicationContext context = new ClassPathXmlApplicationContext("bean-ditest.xml");
         // 通过 id 和 class 获取 bean
-        Emp emp = context.getBean("emp", Emp.class);
+        Emp emp = context.getBean("emp3", Emp.class);
         emp.work();
     }
 

@@ -18,4 +18,30 @@
         <!--对象类型属性注入 ref="bean的id" -->
         <property name="dept" ref="dept"/>
     </bean>
+
+    <!--
+    方法2:内部 bean
+    -->
+    <bean id="emp2" class="com.atguigu.spring6.iocxml.ditest.Emp">
+        <!--普通属性注入 value -->
+        <property name="age" value="44"/>
+        <property name="name" value="李四"/>
+        <!--内部 bean-->
+        <property name="dept">
+            <bean id="dept2" class="com.atguigu.spring6.iocxml.ditest.Dept">
+                <property name="deptName" value="测试部"/>
+            </bean>
+        </property>
+    </bean>
+
+    <!--级联赋值-->
+    <bean id="dept3" class="com.atguigu.spring6.iocxml.ditest.Dept">
+        <property name="deptName" value="333部"/>
+    </bean>
+    <bean id="emp3" class="com.atguigu.spring6.iocxml.ditest.Emp">
+        <property name="name" value="小明"/>
+        <property name="age" value="33"/>
+        <property name="dept" ref="dept3"></property>
+        <property name="deptName" value="444部"></property>
+    </bean>
 </beans>

@@ -436,8 +436,91 @@ public class TestDiBook {
         </bean>
     </beans>
     ```
-- 引用内部 bean
+  - 引用内部 bean
+      ```xml
+      <?xml version="1.0" encoding="UTF-8"?>
+      <beans xmlns="http://www.springframework.org/schema/beans"
+             xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+             xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd">
+          <!--
+          方法2:内部 bean
+          -->
+          <bean id="emp2" class="com.atguigu.spring6.iocxml.ditest.Emp">
+              <!--普通属性注入 value -->
+              <property name="age" value="44"/>
+              <property name="name" value="李四"/>
+              <!--内部 bean-->
+              <property name="dept">
+                  <bean id="dept2" class="com.atguigu.spring6.iocxml.ditest.Dept">
+                      <property name="deptName" value="测试部"/>
+                  </bean>
+              </property>
+          </bean>
+      </beans>
+      ```
+      ```java
+      package com.atguigu.spring6.iocxml.ditest;
+      import org.springframework.context.support.ClassPathXmlApplicationContext;
+        public class TestEmp {
+        public static void main(String[] args) {
+        // 加载配置文件
+        ClassPathXmlApplicationContext context = new ClassPathXmlApplicationContext("bean-ditest.xml");
+        // 通过 id 和 class 获取 bean
+        Emp emp = context.getBean("emp2", Emp.class);
+        emp.work();
+        }
+      }
+      ```
 - 级联属性赋值
+    ```xml
+    <?xml version="1.0" encoding="UTF-8"?>
+    <beans xmlns="http://www.springframework.org/schema/beans"
+           xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+           xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd">
+        <!--级联赋值-->
+        <bean id="dept3" class="com.atguigu.spring6.iocxml.ditest.Dept">
+            <property name="deptName" value="333部"/>
+        </bean>
+        <bean id="emp3" class="com.atguigu.spring6.iocxml.ditest.Emp">
+            <property name="name" value="小明"/>
+            <property name="age" value="33"/>
+            <property name="dept" ref="dept3"></property>
+            <property name="deptName" value="444部"></property>
+        </bean>
+    </beans>
+    ```
+```java
+package com.atguigu.spring6.iocxml.ditest;
+public class Emp {
+    private String name;
+    private Integer age;
+    private Dept dept;
+
+    public void work() {
+        System.out.println(name + " " + age + " is working");
+        dept.info();
+    }
+
+    public void setName(String name) {
+        this.name = name;
+    }
+
+    public void setAge(Integer age) {
+        this.age = age;
+    }
+
+    public void setDept(Dept dept) {
+        this.dept = dept;
+    }
+
+    // 这里是关键
+    public void setDeptName(String deptName) {
+        if (this.dept != null) {
+            this.dept.setDeptName(deptName);
+        }
+    }
+}
+```
 ### 3.1.7 实验六:为数组类型属性赋值
 ### 3.1.8 实验七:为集合类型属性赋值
 ### 3.1.9 实验八:p命名空间

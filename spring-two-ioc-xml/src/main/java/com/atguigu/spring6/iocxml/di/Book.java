@@ -15,9 +15,11 @@ public class Book {
     public Book(String name, String author) {
         this.name = name;
         this.author = author;
+        System.out.println("book构造器");
     }
 
     public Book() {
+        System.out.println("book无参构造器");
     }
 
     @Override

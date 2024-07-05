@@ -8,4 +8,9 @@
         <property name="name" value="java"/>
         <property name="author" value="zhangsan"/>
     </bean>
+    <!--构造器和构造方法注入-->
+    <bean id="bookCon" class="com.atguigu.spring6.iocxml.di.Book">
+        <constructor-arg name="name" value="java"/>
+        <constructor-arg name="author" value="zhangsan"/>
+    </bean>
 </beans>

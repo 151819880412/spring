@@ -932,6 +932,36 @@ public class TestJdbc {
 }
 ```
 ### 3.1.11 实验十:bean的作用域
+```xml
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd">
+    <!--
+    通过 scope 可以配置单实例还是多实例  默认单实例
+    单实例是初始化的时候创建  多实例是 getBean 的时候创建
+    singleton  单实例
+    prototype  多实例
+    -->
+    <bean id="orders" class="com.atguigu.spring6.iocxml.scope.Orders" scope="singleton">
+    </bean>
+</beans>
+```
+```java
+package com.atguigu.spring6.iocxml.scope;
+import org.springframework.context.support.ClassPathXmlApplicationContext;
+
+public class TestOrders {
+    public static void main(String[] args) {
+        ClassPathXmlApplicationContext context = new ClassPathXmlApplicationContext("bean-scope.xml");
+        Orders orders1 = context.getBean("orders", Orders.class);
+        Orders orders2 = context.getBean("orders", Orders.class);
+        System.out.println(orders1);
+        System.out.println(orders2);
+
+    }
+}
+```
 ### 3.1.12 实验十-:bean生命周期
 ### 3.1.13 实验十二:FactoryBean
 ### 3.1.14 实验十三:基于xml自动装配

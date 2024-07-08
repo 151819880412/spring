@@ -853,9 +853,26 @@ public class Teacher {
     }
 }
 ```
-
-
 ### 3.1.9 实验八:p命名空间
+```xml
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xmlns:util="http://www.springframework.org/schema/util"
+       xmlns:p="http://www.springframework.org/schema/p"
+       xsi:schemaLocation="http://www.springframework.org/schema/util
+       http://www.springframework.org/schema/util/spring-util.xsd
+       http://www.springframework.org/schema/beans
+       http://www.springframework.org/schema/beans/spring-beans.xsd"
+>
+    <!--P命名空间注入-->
+    <bean id="studentp" class="com.atguigu.spring6.iocxml.dimap.Student"
+          p:id="1pp" p:name="张三pp"
+          p:lessonList-ref="lessonList"
+          p:teacherMap-ref="teacherMap"
+    />
+</beans>
+```
 ### 3.1.10 实验九:引入外部属性文件
 ### 3.1.11 实验十:bean的作用域
 ### 3.1.12 实验十-:bean生命周期

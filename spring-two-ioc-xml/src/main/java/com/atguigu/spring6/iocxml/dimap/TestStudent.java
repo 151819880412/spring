@@ -14,7 +14,7 @@ public class TestStudent {
 
     public static void main(String[] args) {
         ClassPathXmlApplicationContext context = new ClassPathXmlApplicationContext("bean-diref.xml");
-        Student student = context.getBean("student", Student.class);
+        Student student = context.getBean("studentp", Student.class);
         student.run();
     }
 }

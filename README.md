@@ -549,6 +549,7 @@ public class Emp {
 </beans>
 ```
 ### 3.1.8 实验七:为集合类型属性赋值
+- 为 List 集合类型属性赋值
 ```xml
 <?xml version="1.0" encoding="UTF-8"?>
 <beans xmlns="http://www.springframework.org/schema/beans"
@@ -574,6 +575,286 @@ public class Emp {
     </bean>
 </beans>
 ```
+- 为 map 类型属性赋值
+```xml
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd">
+
+    <!--
+        1. 创建两个对象
+        2. 注入普通类型属性
+        3. 在学生 bean 注入 map 集合类型属性
+    -->
+    <bean id="teacher1" class="com.atguigu.spring6.iocxml.dimap.Teacher">
+        <property name="id" value="1"/>
+        <property name="name" value="张三"/>
+    </bean>
+    <bean id="teacher2" class="com.atguigu.spring6.iocxml.dimap.Teacher">
+        <property name="id" value="2"/>
+        <property name="name" value="小明"/>
+    </bean>
+    <bean id="student" class="com.atguigu.spring6.iocxml.dimap.Student">
+        <property name="id" value="11"/>
+        <property name="name" value="李四"/>
+        <property name="teacherMap">
+            <map>
+                <entry key="a" value-ref="teacher1"/>
+                <entry key="b" value-ref="teacher2"/>
+            </map>
+        </property>
+    </bean>
+</beans>
+```
+```java
+package com.atguigu.spring6.iocxml.dimap;
+import java.util.Map;
+
+public class Student {
+    private String name;
+    private String id;
+    private Map<String,Teacher> teacherMap;
+
+    public String getId() {
+        return id;
+    }
+
+    public void setId(String id) {
+        this.id = id;
+    }
+
+    public String getName() {
+        return name;
+    }
+
+    public void setName(String name) {
+        this.name = name;
+    }
+
+    public Map<String, Teacher> getTeacherMap() {
+        return teacherMap;
+    }
+
+    public void setTeacherMap(Map<String, Teacher> teacherMap) {
+        this.teacherMap = teacherMap;
+    }
+
+    public void run (){
+        System.out.println("学生的id"+id+"  学生的name"+name);
+        System.out.println(teacherMap);
+    }
+}
+```
+```java
+package com.atguigu.spring6.iocxml.dimap;
+public class Teacher {
+    private String name;
+    private String id;
+
+    public String getName() {
+        return name;
+    }
+
+    public void setName(String name) {
+        this.name = name;
+    }
+
+    public String getId() {
+        return id;
+    }
+
+    public void setId(String id) {
+        this.id = id;
+    }
+
+    @Override
+    public String toString() {
+        return "Teacher{" +
+                "name='" + name + '\'' +
+                ", id='" + id + '\'' +
+                '}';
+    }
+}
+```
+```java
+package com.atguigu.spring6.iocxml.dimap;
+import org.springframework.context.support.ClassPathXmlApplicationContext;
+public class TestStudent {
+
+    public static void main(String[] args) {
+        ClassPathXmlApplicationContext context = new ClassPathXmlApplicationContext("bean-dimap.xml");
+        Student student = context.getBean("student", Student.class);
+        student.run();
+    }
+}
+```
+- 引用集合类型的 bean
+```xml
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xmlns:util="http://www.springframework.org/schema/util"
+       xsi:schemaLocation="http://www.springframework.org/schema/util
+       http://www.springframework.org/schema/util/spring-util.xsd
+       http://www.springframework.org/schema/beans
+       http://www.springframework.org/schema/beans/spring-beans.xsd"
+>
+
+    <!--
+        1. 创建三个对象
+        2. 注入普通类型属性
+        3. 使用 util: 类型 定义
+        4. 在学生 bean 引入 util: 定义 bean 完成 list,map 类型属性的注入
+    -->
+    <bean id="student" class="com.atguigu.spring6.iocxml.dimap.Student">
+        <property name="name" value="学生"/>
+        <property name="id" value="11"/>
+        <!--注入 list,map 属性-->
+        <property name="lessonList" ref="lessonList"></property>
+        <property name="teacherMap" ref="teacherMap"></property>
+    </bean>
+
+    <util:list id="lessonList">
+        <ref bean="lesson1"></ref>
+        <ref bean="lesson2"></ref>
+    </util:list>
+    <util:map id="teacherMap">
+        <!--下面代码会报错-->
+        <entry>
+            <key>
+                <value>11111</value>
+            </key>
+            <ref bean="teacher1"></ref>
+        </entry>
+        <entry>
+            <key>
+                <value>222222</value>
+            </key>
+            <ref bean="teacher2"></ref>
+        </entry>
+    </util:map>
+
+    <bean id="teacher1" class="com.atguigu.spring6.iocxml.dimap.Teacher">
+        <property name="name" value="teacher1"/>
+        <property name="id" value="1"/>
+    </bean>
+    <bean id="teacher2" class="com.atguigu.spring6.iocxml.dimap.Teacher">
+        <property name="name" value="teacher2"/>
+        <property name="id" value="2"/>
+    </bean>
+    <bean id="lesson1" class="com.atguigu.spring6.iocxml.dimap.Lesson">
+        <property name="name" value="java"/>
+    </bean>
+    <bean id="lesson2" class="com.atguigu.spring6.iocxml.dimap.Lesson">
+        <property name="name" value="spring"/>
+    </bean>
+</beans>
+```
+```java
+package com.atguigu.spring6.iocxml.dimap;
+import java.util.List;
+import java.util.Map;
+
+public class Student {
+    private String name;
+    private String id;
+    private Map<String,Teacher> teacherMap;
+    private List<Lesson> lessonList;
+
+    public String getId() {
+        return id;
+    }
+
+    public void setId(String id) {
+        this.id = id;
+    }
+
+    public String getName() {
+        return name;
+    }
+
+    public void setName(String name) {
+        this.name = name;
+    }
+
+    public Map<String, Teacher> getTeacherMap() {
+        return teacherMap;
+    }
+
+    public void setTeacherMap(Map<String, Teacher> teacherMap) {
+        this.teacherMap = teacherMap;
+    }
+
+    public List<Lesson> getLessonList() {
+        return lessonList;
+    }
+
+    public void setLessonList(List<Lesson> lessonList) {
+        this.lessonList = lessonList;
+    }
+
+    public void run (){
+        System.out.println("学生的id"+id+"  学生的name"+name);
+        System.out.println(teacherMap);
+        System.out.println(lessonList);
+    }
+}
+```
+```java
+package com.atguigu.spring6.iocxml.dimap;
+public class Lesson {
+    private String name;
+
+    public String getName() {
+        return name;
+    }
+
+    public void setName(String name) {
+        this.name = name;
+    }
+
+    @Override
+    public String toString() {
+        return "Lesson{" +
+                "name='" + name + '\'' +
+                '}';
+    }
+}
+```
+```java
+package com.atguigu.spring6.iocxml.dimap;
+public class Teacher {
+    private String name;
+    private String id;
+
+    public String getName() {
+        return name;
+    }
+
+    public void setName(String name) {
+        this.name = name;
+    }
+
+    public String getId() {
+        return id;
+    }
+
+    public void setId(String id) {
+        this.id = id;
+    }
+
+    @Override
+    public String toString() {
+        return "Teacher{" +
+                "name='" + name + '\'' +
+                ", id='" + id + '\'' +
+                '}';
+    }
+}
+```
+
+
 ### 3.1.9 实验八:p命名空间
 ### 3.1.10 实验九:引入外部属性文件
 ### 3.1.11 实验十:bean的作用域

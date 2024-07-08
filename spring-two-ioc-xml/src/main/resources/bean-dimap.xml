@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd">
+
+    <!--
+        1. 创建两个对象
+        2. 注入普通类型属性
+        3. 在学生 bean 注入 map 集合类型属性
+    -->
+    <bean id="teacher1" class="com.atguigu.spring6.iocxml.dimap.Teacher">
+        <property name="id" value="1"/>
+        <property name="name" value="张三"/>
+    </bean>
+    <bean id="teacher2" class="com.atguigu.spring6.iocxml.dimap.Teacher">
+        <property name="id" value="2"/>
+        <property name="name" value="小明"/>
+    </bean>
+    <bean id="student" class="com.atguigu.spring6.iocxml.dimap.Student">
+        <property name="id" value="11"/>
+        <property name="name" value="李四"/>
+        <property name="teacherMap">
+            <map>
+                <entry key="a" value-ref="teacher1"/>
+                <entry key="b" value-ref="teacher2"/>
+            </map>
+        </property>
+    </bean>
+</beans>

@@ -1,0 +1,59 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xmlns:util="http://www.springframework.org/schema/util"
+       xsi:schemaLocation="http://www.springframework.org/schema/util
+       http://www.springframework.org/schema/util/spring-util.xsd
+       http://www.springframework.org/schema/beans
+       http://www.springframework.org/schema/beans/spring-beans.xsd"
+>
+
+    <!--
+        1. 创建三个对象
+        2. 注入普通类型属性
+        3. 使用 util: 类型 定义
+        4. 在学生 bean 引入 util: 定义 bean 完成 list,map 类型属性的注入
+    -->
+    <bean id="student" class="com.atguigu.spring6.iocxml.dimap.Student">
+        <property name="name" value="学生"/>
+        <property name="id" value="11"/>
+        <!--注入 list,map 属性-->
+        <property name="lessonList" ref="lessonList"></property>
+        <property name="teacherMap" ref="teacherMap"></property>
+    </bean>
+
+    <util:list id="lessonList">
+        <ref bean="lesson1"></ref>
+        <ref bean="lesson2"></ref>
+    </util:list>
+    <util:map id="teacherMap">
+        <!--下面代码会报错-->
+        <entry>
+            <key>
+                <value>11111</value>
+            </key>
+            <ref bean="teacher1"></ref>
+        </entry>
+        <entry>
+            <key>
+                <value>222222</value>
+            </key>
+            <ref bean="teacher2"></ref>
+        </entry>
+    </util:map>
+
+    <bean id="teacher1" class="com.atguigu.spring6.iocxml.dimap.Teacher">
+        <property name="name" value="teacher1"/>
+        <property name="id" value="1"/>
+    </bean>
+    <bean id="teacher2" class="com.atguigu.spring6.iocxml.dimap.Teacher">
+        <property name="name" value="teacher2"/>
+        <property name="id" value="2"/>
+    </bean>
+    <bean id="lesson1" class="com.atguigu.spring6.iocxml.dimap.Lesson">
+        <property name="name" value="java"/>
+    </bean>
+    <bean id="lesson2" class="com.atguigu.spring6.iocxml.dimap.Lesson">
+        <property name="name" value="spring"/>
+    </bean>
+</beans>

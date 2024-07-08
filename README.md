@@ -874,6 +874,63 @@ public class Teacher {
 </beans>
 ```
 ### 3.1.10 实验九:引入外部属性文件
+```properties
+jdbc.user=root
+jdbc.password=qwert123
+jdbc.url=jdbc:mysql://localhost:3306/atguigu?serverTimezone=UTC
+jdbc.driver=com.mysql.cj.jdbc.Driver
+```
+```xml
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xmlns:context="http://www.springframework.org/schema/context"
+       xsi:schemaLocation="
+       http://www.springframework.org/schema/context
+       http://www.springframework.org/schema/context/spring-context.xsd
+       http://www.springframework.org/schema/beans
+       http://www.springframework.org/schema/beans/spring-beans.xsd
+">
+    <!--引入外部属性文件-->
+    <!--<context:property-placeholder location="jdbc.properties"/>-->
+    <context:property-placeholder location="classpath:jdbc.properties"/>
+    <!--完成数据库数据的注入-->
+    <bean id="druidDataSource" class="com.alibaba.druid.pool.DruidDataSource">
+        <property name="url" value="${jdbc.url}"/>
+        <property name="username" value="${jdbc.user}"/>
+        <property name="password" value="${jdbc.password}"/>
+        <property name="driverClassName" value="${jdbc.driver}"/>
+    </bean>
+</beans>
+```
+```java
+package com.atguigu.spring6.iocxml.jdbc;
+
+import com.alibaba.druid.pool.DruidDataSource;
+import org.junit.jupiter.api.Test;
+import org.springframework.context.support.ClassPathXmlApplicationContext;
+import java.sql.Connection;
+import java.sql.SQLException;
+
+public class TestJdbc {
+
+    @Test
+    public void test() throws SQLException {
+        // 方法一
+        // DruidDataSource druidDataSource = new DruidDataSource();
+        // druidDataSource.setUrl("jdbc:mysql://localhost:3306/atguigu?serverTimezone=UTC");
+        // druidDataSource.setUsername("root");
+        // druidDataSource.setPassword("qwert123");
+        // druidDataSource.setDriverClassName("com.mysql.cj.jdbc.Driver");
+        // System.out.println(druidDataSource.getConnection());
+
+        // 方法二
+        ClassPathXmlApplicationContext context = new ClassPathXmlApplicationContext("bean-jdbc.xml");
+        DruidDataSource druidDataSource = context.getBean(DruidDataSource.class);
+        System.out.println(druidDataSource.getConnection());
+    }
+}
+```
 ### 3.1.11 实验十:bean的作用域
 ### 3.1.12 实验十-:bean生命周期
 ### 3.1.13 实验十二:FactoryBean

@@ -971,5 +971,142 @@ public class TestOrders {
 - bean 对象创建完成了，可以使用
 - bean 对象销毁(指定销毁的方法)
 - IOC 容器关闭
+```xml
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd">
+
+    <bean id="user" class="com.atguigu.spring6.iocxml.life.User" scope="singleton" init-method="init" destroy-method="destroy">
+        <property name="name" value="张三"/>
+    </bean>
+
+    <bean id="myBeanPost" class="com.atguigu.spring6.iocxml.life.MyBeanPost"/>
+</beans>
+```
+```java
+package com.atguigu.spring6.iocxml.life;
+public class User {
+    private String name;
+
+    //  无参构造
+    public User() {
+        System.out.println("1. bean 对象创建(调用无参构造)");
+    }
+
+
+    public void setName(String name) {
+        System.out.println("2. 给 bean 对象设置相关属性");
+        this.name = name;
+    }
+
+    // 初始化的方法
+    public void init() {
+        System.out.println("4. bean 初始化(调用指定初始化的方法)");
+    }
+
+    // 销毁的方法
+    public void destroy() {
+        System.out.println("7. bean 对象销毁(指定销毁的方法)");
+    }
+
+    public User(String name) {
+        this.name = name;
+    }
+
+    public String getName() {
+        return name;
+    }
+
+}
+```
+```java
+package com.atguigu.spring6.iocxml.life;
+
+import org.springframework.beans.BeansException;
+import org.springframework.beans.factory.config.BeanPostProcessor;
+import org.springframework.lang.Nullable;
+
+public class MyBeanPost implements BeanPostProcessor {
+    @Override
+    @Nullable
+    public Object postProcessBeforeInitialization(Object bean, String beanName) throws BeansException {
+        System.out.println("3. bean 后置处理器(初始化之前执行)");
+        return bean;
+    }
+
+    @Override
+    @Nullable
+    public Object postProcessAfterInitialization(Object bean, String beanName) throws BeansException {
+        System.out.println("5. bean 后置处理器(初始化之后执行)");
+        return bean;
+    }
+}
+```
+```java
+package com.atguigu.spring6.iocxml.life;
+
+import org.springframework.context.support.ClassPathXmlApplicationContext;
+
+
+public class TestUser {
+
+    public static void main(String[] args) {
+
+        ClassPathXmlApplicationContext context = new ClassPathXmlApplicationContext("bean-life.xml");
+        User user = context.getBean("user", User.class);
+        System.out.println("6. bean 对象创建完成了，可以使用");
+        System.out.println(user);
+
+        context.close();
+
+    }
+}
+```
 ### 3.1.13 实验十二:FactoryBean
+```xml
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd">
+
+    <bean id="user" class="com.atguigu.spring6.iocxml.factoryBean.MyFactoryBean">
+
+    </bean>
+</beans>
+```
+```java
+package com.atguigu.spring6.iocxml.factoryBean;
+import org.springframework.beans.factory.FactoryBean;
+
+public class MyFactoryBean implements FactoryBean<User> {
+    @Override
+    public User getObject() throws Exception {
+        return new User();
+    }
+
+    @Override
+    public Class<?> getObjectType() {
+        return User.class;
+    }
+}
+// public class MyFactoryBean  {
+//
+// }
+```
+```java
+package com.atguigu.spring6.iocxml.factoryBean;
+import org.springframework.context.support.ClassPathXmlApplicationContext;
+
+public class TestUser {
+
+    public static void main(String[] args) {
+        ClassPathXmlApplicationContext context = new ClassPathXmlApplicationContext("bean-factorybean.xml");
+        User user = context.getBean("user", User.class);
+        // MyFactoryBean user = context.getBean("user", MyFactoryBean.class);
+        System.out.println(user);
+    }
+}
+
+```
 ### 3.1.14 实验十三:基于xml自动装配

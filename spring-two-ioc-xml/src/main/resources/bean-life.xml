@@ -6,4 +6,6 @@
     <bean id="user" class="com.atguigu.spring6.iocxml.life.User" scope="singleton" init-method="init" destroy-method="destroy">
         <property name="name" value="张三"/>
     </bean>
+
+    <bean id="myBeanPost" class="com.atguigu.spring6.iocxml.life.MyBeanPost"/>
 </beans>

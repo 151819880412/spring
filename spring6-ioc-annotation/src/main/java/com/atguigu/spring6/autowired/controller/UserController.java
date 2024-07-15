@@ -1,5 +1,4 @@
 package com.atguigu.spring6.autowired.controller;
-
 import com.atguigu.spring6.autowired.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -20,14 +19,21 @@ public class UserController {
     // private UserService userService;
 
     // 第二种方式: set 注入
+    // private UserService userService;
+    // @Autowired
+    // public void setUserService(UserService userService) {
+    //     this.userService = userService;
+    // }
+
+    //  场景三：构造方法注入
     private UserService userService;
+
     @Autowired
-    public void setUserService(UserService userService) {
+    public UserController(UserService userService) {
         this.userService = userService;
     }
 
-    public void addUserController()
-    {
+    public void addUserController() {
         System.out.println("Controller 调用 Service");
         userService.addUserService();
     }

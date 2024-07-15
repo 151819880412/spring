@@ -35,9 +35,16 @@ public class UserController {
     // }
 
     // 场景四：形参上注入
+    // private UserService userService;
+    //
+    // public UserController(@Autowired UserService userService) {
+    //     this.userService = userService;
+    // }
+
+    //  场景五：只且只有一个有参数构造函数,可以省略注解
     private UserService userService;
 
-    public UserController(@Autowired UserService userService) {
+    public UserController(UserService userService) {
         this.userService = userService;
     }
 

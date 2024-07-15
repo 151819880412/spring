@@ -35,9 +35,16 @@ public class UserServiceImpl implements UserService {
     // }
 
     // 场景四：形参上注入
+    // private UserDao userDao;
+    //
+    // public UserServiceImpl(@Autowired UserDao userDao) {
+    //     this.userDao = userDao;
+    // }
+
+    //  场景五：只且只有一个有参数构造函数,可以省略注解
     private UserDao userDao;
 
-    public UserServiceImpl(@Autowired UserDao userDao) {
+    public UserServiceImpl(UserDao userDao) {
         this.userDao = userDao;
     }
 

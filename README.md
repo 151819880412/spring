@@ -1532,6 +1532,52 @@ public class UserServiceImpl implements UserService {
 }
 ```
 - 场景四：形参上注入
+```java
+package com.atguigu.spring6.autowired.controller;
+
+import com.atguigu.spring6.autowired.service.UserService;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Controller;
+
+@Controller
+public class UserController {
+
+    // 场景四：形参上注入
+    private UserService userService;
+
+    public UserController(@Autowired UserService userService) {
+        this.userService = userService;
+    }
+
+    public void addUserController() {
+        System.out.println("Controller 调用 Service");
+        userService.addUserService();
+    }
+}
+```
+```java
+package com.atguigu.spring6.autowired.service;
+import com.atguigu.spring6.autowired.dao.UserDao;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
+
+@Service
+public class UserServiceImpl implements UserService {
+   
+    // 场景四：形参上注入
+    private UserDao userDao;
+
+    public UserServiceImpl(@Autowired UserDao userDao) {
+        this.userDao = userDao;
+    }
+
+    @Override
+    public void addUserService() {
+        System.out.println("Service 调用 Dao");
+        userDao.addUserDao();
+    }
+}
+```
 - 场景五：只有一个构造函数,无注解
 - 场景六：@Autowired注解和@Qualifier注解联合
 #### 实验二：@Resource注入

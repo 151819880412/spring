@@ -1,4 +1,5 @@
 package com.atguigu.spring6.autowired.service;
+
 import com.atguigu.spring6.autowired.dao.UserDao;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -26,10 +27,17 @@ public class UserServiceImpl implements UserService {
     // }
 
     //  场景三：构造方法注入
+    // private UserDao userDao;
+    //
+    // @Autowired
+    // public UserServiceImpl(UserDao userDao) {
+    //     this.userDao = userDao;
+    // }
+
+    // 场景四：形参上注入
     private UserDao userDao;
 
-    @Autowired
-    public UserServiceImpl(UserDao userDao) {
+    public UserServiceImpl(@Autowired UserDao userDao) {
         this.userDao = userDao;
     }
 

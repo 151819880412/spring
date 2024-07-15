@@ -1406,6 +1406,61 @@ public class TestUserController {
 }
 ```
 - 场景二：set 注入
+```java
+package com.atguigu.spring6.autowired.controller;
+import com.atguigu.spring6.autowired.service.UserService;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Controller;
+
+@Controller
+public class UserController {
+    //  注入 Service
+    // 第一种方式:属性注入
+    // @Autowired  //  根据类型找到对应的对象并注入
+    // private UserService userService;
+
+    // 第二种方式: set 注入
+    private UserService userService;
+    @Autowired
+    public void setUserService(UserService userService) {
+        this.userService = userService;
+    }
+
+    public void addUserController()
+    {
+        System.out.println("Controller 调用 Service");
+        userService.addUserService();
+    }
+}
+
+```
+```java
+package com.atguigu.spring6.autowired.service;
+import com.atguigu.spring6.autowired.dao.UserDao;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
+
+@Service
+public class UserServiceImpl implements UserService{
+    // 注入 dao
+    // 第一种方式:属性注入
+    // @Autowired  //  根据类型找到对应的对象并注入
+    // private UserDao userDao;
+
+    // 第二种方式: set 注入
+    private UserDao userDao;
+    @Autowired
+    public void setUserDao(UserDao userDao) {
+        this.userDao = userDao;
+    }
+
+    @Override
+    public void addUserService() {
+        System.out.println("Service 调用 Dao");
+        userDao.addUserDao();
+    }
+}
+```
 - 场景三：构造方法注入
 - 场景四：形参上注入
 - 场景五：只有一个构造函数,无注解

@@ -16,8 +16,16 @@ import org.springframework.stereotype.Controller;
 public class UserController {
     //  注入 Service
     // 第一种方式:属性注入
-    @Autowired  //  根据类型找到对应的对象并注入
+    // @Autowired  //  根据类型找到对应的对象并注入
+    // private UserService userService;
+
+    // 第二种方式: set 注入
     private UserService userService;
+    @Autowired
+    public void setUserService(UserService userService) {
+        this.userService = userService;
+    }
+
     public void addUserController()
     {
         System.out.println("Controller 调用 Service");

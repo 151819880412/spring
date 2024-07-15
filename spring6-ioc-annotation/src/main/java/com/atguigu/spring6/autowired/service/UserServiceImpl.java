@@ -16,8 +16,15 @@ import org.springframework.stereotype.Service;
 public class UserServiceImpl implements UserService{
     // 注入 dao
     // 第一种方式:属性注入
-    @Autowired  //  根据类型找到对应的对象并注入
+    // @Autowired  //  根据类型找到对应的对象并注入
+    // private UserDao userDao;
+
+    // 第二种方式: set 注入
     private UserDao userDao;
+    @Autowired
+    public void setUserDao(UserDao userDao) {
+        this.userDao = userDao;
+    }
 
     @Override
     public void addUserService() {

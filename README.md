@@ -1627,4 +1627,50 @@ public class UserServiceImpl implements UserService {
 }
 ```
 - 场景六：@Autowired注解和@Qualifier注解联合
+```java
+package com.atguigu.spring6.autowired.service;
+import com.atguigu.spring6.autowired.dao.UserDao;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Qualifier;
+import org.springframework.stereotype.Service;
+
+@Service
+public class UserServiceImpl implements UserService {
+
+    // 场景四：形参上注入
+    // 会报错 因为有多个实现类
+    // private UserDao userDao;
+    //
+    // public UserServiceImpl(@Autowired UserDao userDao) {
+    //     this.userDao = userDao;
+    // }
+
+    // 场景六：@Autowired注解和@Qualifier注解联合
+    @Autowired
+    @Qualifier(value = "userRedisDaoImpl")
+    private UserDao userDao;
+
+    public void UserServiceImpl(UserDao userDao) {
+        this.userDao = userDao;
+    }
+
+    @Override
+    public void addUserService() {
+        System.out.println("Service 调用 Dao");
+        userDao.addUserDao();
+    }
+}
+```
+```java
+package com.atguigu.spring6.autowired.dao;
+import org.springframework.stereotype.Repository;
+
+@Repository
+public class UserRedisDaoImpl implements UserDao{
+    @Override
+    public void addUserDao() {
+        System.out.println("dao redis .......");
+    }
+}
+```
 #### 实验二：@Resource注入

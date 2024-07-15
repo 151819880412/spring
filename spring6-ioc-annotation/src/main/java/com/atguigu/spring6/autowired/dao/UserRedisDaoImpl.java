@@ -4,17 +4,16 @@ import org.springframework.stereotype.Repository;
 
 /**
  * @Author: Admin
- * @Create: 2024/7/15 - 下午3:02
+ * @Create: 2024/7/15 - 下午4:07
  * @Version: v1.0
- * ClassName: UserDaoImpl
+ * ClassName: UserRedisDaoImpl
  * Package: com.atguigu.spring6.autowired.dao
  * Description: 描述
  */
 @Repository
-public class UserDaoImpl implements UserDao {
-
+public class UserRedisDaoImpl implements UserDao{
     @Override
     public void addUserDao() {
-        System.out.println("dao层添加用户");
+        System.out.println("dao redis .......");
     }
 }

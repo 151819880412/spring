@@ -1323,6 +1323,88 @@ Spring 提供了以下多个注解，这些注解可以直接标注在 Java 类�
 ### 3.1.5 依赖注入
 #### 实验一：@Autowired注入
 - 场景一：属性注入
+```java
+package com.atguigu.spring6.autowired.controller;
+import com.atguigu.spring6.autowired.service.UserService;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Controller;
+
+@Controller
+public class UserController {
+    //  注入 Service
+    // 第一种方式:属性注入
+    @Autowired  //  根据类型找到对应的对象并注入
+    private UserService userService;
+    public void addUserController()
+    {
+        System.out.println("Controller 调用 Service");
+        userService.addUserService();
+    }
+}
+```
+```java
+package com.atguigu.spring6.autowired.service;
+
+public interface UserService {
+    public void addUserService();
+}
+```
+```java
+package com.atguigu.spring6.autowired.service;
+import com.atguigu.spring6.autowired.dao.UserDao;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
+
+@Service
+public class UserServiceImpl implements UserService{
+    // 注入 dao
+    // 第一种方式:属性注入
+    @Autowired  //  根据类型找到对应的对象并注入
+    private UserDao userDao;
+
+    @Override
+    public void addUserService() {
+        System.out.println("Service 调用 Dao");
+        userDao.addUserDao();
+    }
+}
+```
+```java
+package com.atguigu.spring6.autowired.dao;
+
+public interface UserDao {
+    public void addUserDao();
+}
+```
+```java
+package com.atguigu.spring6.autowired.dao;
+import org.springframework.stereotype.Repository;
+
+@Repository
+public class UserDaoImpl implements UserDao{
+
+    @Override
+    public void addUserDao() {
+        System.out.println("dao层添加用户");
+    }
+}
+
+```
+```java
+package com.atguigu.spring6.autowired;
+import com.atguigu.spring6.autowired.controller.UserController;
+import org.springframework.context.support.ClassPathXmlApplicationContext;
+
+public class TestUserController {
+
+    public static void main(String[] args)
+    {
+        ClassPathXmlApplicationContext context = new ClassPathXmlApplicationContext("bean.xml");
+        UserController userController = context.getBean("userController", UserController.class);
+        userController.addUserController();
+    }
+}
+```
 - 场景二：set 注入
 - 场景三：构造方法注入
 - 场景四：形参上注入

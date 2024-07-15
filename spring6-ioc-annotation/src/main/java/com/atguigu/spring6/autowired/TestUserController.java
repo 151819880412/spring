@@ -1,6 +1,4 @@
 package com.atguigu.spring6.autowired;
-
-
 import com.atguigu.spring6.autowired.controller.UserController;
 import org.springframework.context.support.ClassPathXmlApplicationContext;
 

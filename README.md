@@ -1110,3 +1110,110 @@ public class TestUser {
 
 ```
 ### 3.1.14 实验十三:基于xml自动装配
+```xml
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd">
+    <!--根据类型自动装配
+        注意: 如果根据类型自动装配,则必须保证容器中唯一 id 必须和类名可以不一致
+        如果根据名称自动装配,则容器中可以有多个
+        autowire="byType" 根据类型自动装配
+        autowire="byName" 根据名称自动装配
+    -->
+    <bean id="userController" class="com.atguigu.spring6.iocxml.auto.controller.UserController" autowire="byType"/>
+    <bean id="userServices" class="com.atguigu.spring6.iocxml.auto.service.UserServiceImpl" autowire="byType"/>
+    <bean id="userDao" class="com.atguigu.spring6.iocxml.auto.dao.UserDaoImpl" autowire="byType"/>
+    <!--根据名称自动装配
+        注意: 如果根据名称自动装配,则容器中可以有多个,但是 id 必须和类名一致
+    -->
+    <!--    <bean id="userController" class="com.atguigu.spring6.iocxml.auto.controller.UserController" autowire="byName"/>-->
+    <!--    <bean id="userService" class="com.atguigu.spring6.iocxml.auto.service.UserServiceImpl" autowire="byName"/>-->
+    <!--    <bean id="userDao" class="com.atguigu.spring6.iocxml.auto.dao.UserDaoImpl" autowire="byName"/>-->
+</beans>
+```
+```java
+package com.atguigu.spring6.iocxml.auto.controller;
+import com.atguigu.spring6.iocxml.auto.service.UserService;
+import com.atguigu.spring6.iocxml.auto.service.UserServiceImpl;
+import org.junit.jupiter.api.Test;
+
+public class UserController {
+
+    public UserService userService;
+
+    public void setUserService(UserService userService) {
+        this.userService = userService;
+    }
+
+    @Test
+    public void addUserController(){
+        System.out.println("Controller层调用了");
+        // 调用 service 的方法
+        userService.addUserService();
+
+        // UserServiceImpl userService = new UserServiceImpl();
+        // userService.addUserService();
+    }
+}
+```
+```java
+package com.atguigu.spring6.iocxml.auto.service;
+import com.atguigu.spring6.iocxml.auto.dao.UserDao;
+
+public class UserServiceImpl implements UserService{
+
+    private UserDao userDao;
+
+    public void setUserDao(UserDao userDao) {
+        this.userDao = userDao;
+    }
+
+    @Override
+    public void addUserService() {
+        System.out.println("UserService---");
+        // 调用 dao 中的方法
+        userDao.addUserDao();
+        // UserDaoImpl userDao = new UserDaoImpl();
+        // userDao.addUserDao();
+    }
+}
+```
+```java
+package com.atguigu.spring6.iocxml.auto.service;
+
+public interface UserService {
+    public void addUserService();
+}
+```
+```java
+package com.atguigu.spring6.iocxml.auto.dao;
+
+public class UserDaoImpl implements UserDao{
+    @Override
+    public void addUserDao() {
+        System.out.println("addUserDao---");
+    }
+}
+```
+```java
+package com.atguigu.spring6.iocxml.auto.dao;
+
+public interface UserDao {
+    public void addUserDao();
+}
+```
+```java
+package com.atguigu.spring6.iocxml.auto;
+import com.atguigu.spring6.iocxml.auto.controller.UserController;
+import org.springframework.context.support.ClassPathXmlApplicationContext;
+
+public class TestUser {
+    public static void main(String[] args) {
+        ClassPathXmlApplicationContext context = new ClassPathXmlApplicationContext("bean-auto.xml");
+        UserController userController = context.getBean("userController", UserController.class);
+        userController.addUserController();
+    }
+}
+
+```

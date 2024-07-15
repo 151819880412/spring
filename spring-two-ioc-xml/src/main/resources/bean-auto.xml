@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd">
+    <!--根据类型自动装配
+        注意: 如果根据类型自动装配,则必须保证容器中唯一 id 必须和类名可以不一致
+        如果根据名称自动装配,则容器中可以有多个
+        autowire="byType" 根据类型自动装配
+        autowire="byName" 根据名称自动装配
+    -->
+    <bean id="userController" class="com.atguigu.spring6.iocxml.auto.controller.UserController" autowire="byType"/>
+    <bean id="userServices" class="com.atguigu.spring6.iocxml.auto.service.UserServiceImpl" autowire="byType"/>
+    <bean id="userDao" class="com.atguigu.spring6.iocxml.auto.dao.UserDaoImpl" autowire="byType"/>
+    <!--根据名称自动装配
+        注意: 如果根据名称自动装配,则容器中可以有多个,但是 id 必须和类名一致
+    -->
+    <!--    <bean id="userController" class="com.atguigu.spring6.iocxml.auto.controller.UserController" autowire="byName"/>-->
+    <!--    <bean id="userService" class="com.atguigu.spring6.iocxml.auto.service.UserServiceImpl" autowire="byName"/>-->
+    <!--    <bean id="userDao" class="com.atguigu.spring6.iocxml.auto.dao.UserDaoImpl" autowire="byName"/>-->
+</beans>

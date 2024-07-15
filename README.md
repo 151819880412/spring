@@ -1217,3 +1217,115 @@ public class TestUser {
 }
 
 ```
+### 3.1.1 基于注解的IOC
+从 Java 5 开始，Java 增加了对注解（Annotation）的支持，它是代码中的一种特殊标记，可以在编译、类加载和运行时被读取，执行相应的处理。开发人员可以通过注解在不改变原有代码和逻辑的情况下，在源代码中嵌入补充信息。
+Spring 从 2.5 版本开始提供了对注解技术的全面支持，我们可以使用注解来实现自动装配，简化 Spring 的 XML 配置。
+Spring 通过注解实现自动装配的步骤如下：
+### 3.1.2 引入依赖
+```xml
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0"
+         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+    <modelVersion>4.0.0</modelVersion>
+    <parent>
+        <groupId>com.atguigu</groupId>
+        <artifactId>spring6</artifactId>
+        <version>1.0-SNAPSHOT</version>
+    </parent>
+
+    <artifactId>spring6-ioc-annotation</artifactId>
+
+    <properties>
+        <maven.compiler.source>17</maven.compiler.source>
+        <maven.compiler.target>17</maven.compiler.target>
+        <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+    </properties>
+
+    <dependencies>
+        <!--spring context依赖-->
+        <!--当你引入Spring Context依赖之后，表示将Spring的基础依赖引入了-->
+        <dependency>
+            <groupId>org.springframework</groupId>
+            <artifactId>spring-context</artifactId>
+            <version>6.0.3</version>
+        </dependency>
+
+        <!--junit5测试-->
+        <dependency>
+            <groupId>org.junit.jupiter</groupId>
+            <artifactId>junit-jupiter-api</artifactId>
+            <version>5.3.1</version>
+        </dependency>
+
+        <!--log4j2的依赖-->
+        <dependency>
+            <groupId>org.apache.logging.log4j</groupId>
+            <artifactId>log4j-core</artifactId>
+            <version>2.19.0</version>
+        </dependency>
+        <dependency>
+            <groupId>org.apache.logging.log4j</groupId>
+            <artifactId>log4j-slf4j2-impl</artifactId>
+            <version>2.19.0</version>
+        </dependency>
+    </dependencies>
+</project>
+```
+### 3.1.3 开启组件扫描
+```xml
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xmlns:context="http://www.springframework.org/schema/context"
+       xsi:schemaLocation="http://www.springframework.org/schema/beans
+    http://www.springframework.org/schema/beans/spring-beans-3.0.xsd
+    http://www.springframework.org/schema/context
+            http://www.springframework.org/schema/context/spring-context.xsd">
+    <!--情况一：最基本的扫描方式-->
+    <context:component-scan base-package="com.atguigu.spring6"/>
+    <!--    &lt;!&ndash;情况二：指定要排除的组件&ndash;&gt;-->
+    <!--    <context:component-scan base-package="com.atguigu.spring6">-->
+    <!--        &lt;!&ndash; context:exclude-filter标签：指定排除规则 &ndash;&gt;-->
+    <!--        &lt;!&ndash;-->
+    <!--            type：设置排除或包含的依据-->
+    <!--            type="annotation"，根据注解排除，expression中设置要排除的注解的全类名-->
+    <!--            type="assignable"，根据类型排除，expression中设置要排除的类型的全类名-->
+    <!--        &ndash;&gt;-->
+    <!--        <context:exclude-filter type="annotation" expression="org.springframework.stereotype.Controller"/>-->
+    <!--        &lt;!&ndash;<context:exclude-filter type="assignable" expression="com.atguigu.spring6.controller.UserController"/>&ndash;&gt;-->
+    <!--    </context:component-scan>-->
+    <!--    &lt;!&ndash;情况三：仅扫描指定组件&ndash;&gt;-->
+    <!--    <context:component-scan base-package="com.atguigu" use-default-filters="false">-->
+    <!--        &lt;!&ndash; context:include-filter标签：指定在原有扫描规则的基础上追加的规则 &ndash;&gt;-->
+    <!--        &lt;!&ndash; use-default-filters属性：取值false表示关闭默认扫描规则 &ndash;&gt;-->
+    <!--        &lt;!&ndash; 此时必须设置use-default-filters="false"，因为默认规则即扫描指定包下所有类 &ndash;&gt;-->
+    <!--        &lt;!&ndash;-->
+    <!--            type：设置排除或包含的依据-->
+    <!--            type="annotation"，根据注解排除，expression中设置要排除的注解的全类名-->
+    <!--            type="assignable"，根据类型排除，expression中设置要排除的类型的全类名-->
+    <!--        &ndash;&gt;-->
+    <!--        <context:include-filter type="annotation" expression="org.springframework.stereotype.Controller"/>-->
+    <!--        &lt;!&ndash;<context:include-filter type="assignable" expression="com.atguigu.spring6.controller.UserController"/>&ndash;&gt;-->
+    <!--    </context:component-scan>-->
+</beans>
+```
+### 3.1.4  使用注解定义 Bean
+Spring 提供了以下多个注解，这些注解可以直接标注在 Java 类上，将它们定义成 Spring Bean。
+
+| 注解        | 说明                                                         |
+| ----------- | ------------------------------------------------------------ |
+| @Component  | 该注解用于描述 Spring 中的 Bean，它是一个泛化的概念，仅仅表示容器中的一个组件（Bean），并且可以作用在应用的任何层次，例如 Service 层、Dao 层等。  使用时只需将该注解标注在相应类上即可。 |
+| @Repository | 该注解用于将数据访问层（Dao 层）的类标识为 Spring 中的 Bean，其功能与 @Component 相同。 |
+| @Service    | 该注解通常作用在业务层（Service 层），用于将业务层的类标识为 Spring 中的 Bean，其功能与 @Component 相同。 |
+| @Controller | 该注解通常作用在控制层（如SpringMVC 的 Controller），用于将控制层的类标识为 Spring 中的 Bean，其功能与 @Component 相同。 |
+
+### 3.1.5 依赖注入
+#### 实验一：@Autowired注入
+- 场景一：属性注入
+- 场景二：set 注入
+- 场景三：构造方法注入
+- 场景四：形参上注入
+- 场景五：只有一个构造函数,无注解
+- 场景六：@Autowired注解和@Qualifier注解联合
+#### 实验二：@Resource注入

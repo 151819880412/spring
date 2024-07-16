@@ -1674,3 +1674,118 @@ public class UserRedisDaoImpl implements UserDao{
 }
 ```
 #### 实验二：@Resource注入
+@Resource注解也可以完成属性注入。那它和@Autowired注解有什么区别？
+
+- @Resource注解是JDK扩展包中的，也就是说属于JDK的一部分。所以该注解是标准注解，更加具有通用性。(JSR-250标准中制定的注解类型。JSR是Java规范提案。)
+- @Autowired注解是Spring框架自己的。
+- **@Resource注解默认根据名称装配byName，未指定name时，使用属性名作为name。通过name找不到的话会自动启动通过类型byType装配。**
+- **@Autowired注解默认根据类型装配byType，如果想根据名称装配，需要配合@Qualifier注解一起用。**
+- @Resource注解用在属性上、setter方法上。
+- @Autowired注解用在属性上、setter方法上、构造方法上、构造方法参数上。
+
+@Resource注解属于JDK扩展包，所以不在JDK当中，需要额外引入以下依赖：【**如果是JDK8的话不需要额外引入依赖。高于JDK11或低于JDK8需要引入以下依赖。**】
+```xml
+<dependency>
+    <groupId>jakarta.annotation</groupId>
+    <artifactId>jakarta.annotation-api</artifactId>
+    <version>2.1.1</version>
+</dependency>
+```
+```xml
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xmlns:context="http://www.springframework.org/schema/context"
+       xsi:schemaLocation="http://www.springframework.org/schema/beans
+    http://www.springframework.org/schema/beans/spring-beans-3.0.xsd
+    http://www.springframework.org/schema/context
+            http://www.springframework.org/schema/context/spring-context.xsd">
+    <!--情况一：最基本的扫描方式-->
+    <context:component-scan base-package="com.atguigu.spring6.resource"/>
+    <!--    &lt;!&ndash;情况二：指定要排除的组件&ndash;&gt;-->
+    <!--    <context:component-scan base-package="com.atguigu.spring6">-->
+    <!--        &lt;!&ndash; context:exclude-filter标签：指定排除规则 &ndash;&gt;-->
+    <!--        &lt;!&ndash;-->
+    <!--            type：设置排除或包含的依据-->
+    <!--            type="annotation"，根据注解排除，expression中设置要排除的注解的全类名-->
+    <!--            type="assignable"，根据类型排除，expression中设置要排除的类型的全类名-->
+    <!--        &ndash;&gt;-->
+    <!--        <context:exclude-filter type="annotation" expression="org.springframework.stereotype.Controller"/>-->
+    <!--        &lt;!&ndash;<context:exclude-filter type="assignable" expression="com.atguigu.spring6.controller.UserController"/>&ndash;&gt;-->
+    <!--    </context:component-scan>-->
+    <!--    &lt;!&ndash;情况三：仅扫描指定组件&ndash;&gt;-->
+    <!--    <context:component-scan base-package="com.atguigu" use-default-filters="false">-->
+    <!--        &lt;!&ndash; context:include-filter标签：指定在原有扫描规则的基础上追加的规则 &ndash;&gt;-->
+    <!--        &lt;!&ndash; use-default-filters属性：取值false表示关闭默认扫描规则 &ndash;&gt;-->
+    <!--        &lt;!&ndash; 此时必须设置use-default-filters="false"，因为默认规则即扫描指定包下所有类 &ndash;&gt;-->
+    <!--        &lt;!&ndash;-->
+    <!--            type：设置排除或包含的依据-->
+    <!--            type="annotation"，根据注解排除，expression中设置要排除的注解的全类名-->
+    <!--            type="assignable"，根据类型排除，expression中设置要排除的类型的全类名-->
+    <!--        &ndash;&gt;-->
+    <!--        <context:include-filter type="annotation" expression="org.springframework.stereotype.Controller"/>-->
+    <!--        &lt;!&ndash;<context:include-filter type="assignable" expression="com.atguigu.spring6.controller.UserController"/>&ndash;&gt;-->
+    <!--    </context:component-scan>-->
+</beans>
+```
+```java
+package com.atguigu.spring6.resource.controller;
+import com.atguigu.spring6.resource.service.UserService;
+import jakarta.annotation.Resource;
+import org.springframework.context.support.ClassPathXmlApplicationContext;
+import org.springframework.stereotype.Controller;
+
+
+@Controller
+public class UserController {
+
+    // 根据名称进行注入
+    @Resource(name = "myUserService")
+    private UserService userService;
+
+    public void addUserController()
+    {
+        System.out.println("Controller 调用 Service");
+        userService.addUserService();
+    }
+
+    public static void main(String[] args) {
+        ClassPathXmlApplicationContext context = new ClassPathXmlApplicationContext("bean.xml");
+        UserController userController = context.getBean("userController", UserController.class);
+        userController.addUserController();
+
+    }
+}
+```
+```java
+package com.atguigu.spring6.resource.service;
+import com.atguigu.spring6.resource.dao.UserDao;
+import jakarta.annotation.Resource;
+import org.springframework.stereotype.Service;
+
+@Service("myUserService")
+public class UserServiceImpl implements UserService {
+
+    // 不指定名称就根据属性名称进行注入
+    @Resource
+    UserDao myUserDao;
+
+    @Override
+    public void addUserService() {
+        System.out.println("Service 调用 Dao");
+        myUserDao.addUserDao();
+    }
+}
+```
+```java
+package com.atguigu.spring6.resource.dao;
+import org.springframework.stereotype.Repository;
+
+@Repository
+public class UserDaoImpl implements UserDao {
+    @Override
+    public void addUserDao() {
+        System.out.println("dao层添加用户");
+    }
+}
+```

@@ -1789,3 +1789,33 @@ public class UserDaoImpl implements UserDao {
     }
 }
 ```
+
+#### spring 全注解开发
+```java
+package com.atguigu.spring6.config;
+
+import org.springframework.context.annotation.ComponentScan;
+import org.springframework.context.annotation.Configuration;
+@Configuration  //  配置类
+@ComponentScan("com.atguigu.spring6.resource")   //  开启组件扫描
+public class springConfig {
+
+}
+```
+```java
+package com.atguigu.spring6.resource;
+
+import com.atguigu.spring6.config.springConfig;
+import com.atguigu.spring6.resource.controller.UserController;
+import org.springframework.context.annotation.AnnotationConfigApplicationContext;
+
+public class TestUserControllerAnno {
+    public static void main(String[] args) {
+        //  加载配置类
+        AnnotationConfigApplicationContext annotationConfigApplicationContext = new AnnotationConfigApplicationContext(springConfig.class);
+        UserController userController = annotationConfigApplicationContext.getBean("userController", UserController.class);
+        userController.addUserController();
+
+    }
+}
+```

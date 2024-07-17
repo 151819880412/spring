@@ -17,8 +17,12 @@ import org.springframework.stereotype.Controller;
 @Controller
 public class UserController {
 
-    // 根据名称进行注入
-    @Resource(name = "myUserService")
+    //  1. 根据名称进行注入
+    // @Resource(name = "myUserService")
+    // private UserService userService;
+
+    //  2. 根据类型匹配
+    @Resource
     private UserService userService;
 
     public void addUserController()

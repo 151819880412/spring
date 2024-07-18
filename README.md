@@ -2255,6 +2255,210 @@ public class TestBean {
 ```
 
 # 5. 面向切面 : AOP
+## 5.1 场景模拟
+```java
+package com.atguigu.spring6.aop.example;
+
+public interface Calculator {
+    int add(int i, int j);
+    int sub(int i, int j);
+    int mul(int i, int j);
+    int div(int i, int j);
+}
+```
+```java
+package com.atguigu.spring6.aop.example;
+
+public class CalculatorImpl implements Calculator {
+
+    @Override
+    public int add(int i, int j) {
+        int result = i + j;
+        System.out.println("方法内部 result = " + result);
+        return result;
+    }
+
+    @Override
+    public int sub(int i, int j) {
+        int result = i - j;
+        System.out.println("方法内部 result = " + result);
+        return result;
+    }
+
+    @Override
+    public int mul(int i, int j) {
+        int result = i * j;
+        System.out.println("方法内部 result = " + result);
+        return result;
+    }
+
+    @Override
+    public int div(int i, int j) {
+        int result = i / j;
+        System.out.println("方法内部 result = " + result);
+        return result;
+    }
+}
+```
+```java
+package com.atguigu.spring6.aop.example;
+
+public class CalculatorLogImpl implements Calculator {
+
+    @Override
+    public int add(int i, int j) {
+        System.out.println("[日志] add 方法开始了，参数是：" + i + "," + j);
+        int result = i + j;
+        System.out.println("方法内部 result = " + result);
+        System.out.println("[日志] add 方法结束了，结果是：" + result);
+        return result;
+    }
+
+    @Override
+    public int sub(int i, int j) {
+        System.out.println("[日志] sub 方法开始了，参数是：" + i + "," + j);
+        int result = i - j;
+        System.out.println("方法内部 result = " + result);
+        System.out.println("[日志] sub 方法结束了，结果是：" + result);
+        return result;
+    }
+
+    @Override
+    public int mul(int i, int j) {
+        System.out.println("[日志] mul 方法开始了，参数是：" + i + "," + j);
+        int result = i * j;
+        System.out.println("方法内部 result = " + result);
+        System.out.println("[日志] mul 方法结束了，结果是：" + result);
+        return result;
+    }
+
+    @Override
+    public int div(int i, int j) {
+        System.out.println("[日志] div 方法开始了，参数是：" + i + "," + j);
+        int result = i / j;
+        System.out.println("方法内部 result = " + result);
+        System.out.println("[日志] div 方法结束了，结果是：" + result);
+        return result;
+    }
+}
+```
+## 5.2 代理模式
+```java
+package com.atguigu.spring6.aop.example;
+
+/**
+ * @Author: Admin
+ * @Create: 2024/7/18 - 上午11:07
+ * @Version: v1.0
+ * ClassName: CalculatorStaticProxy
+ * Package: com.atguigu.spring6.aop.example
+ * Description: 静态代理
+ */
+public class CalculatorStaticProxy implements Calculator {
+    // 被代理目标对象传递进来
+    private Calculator calculator;
+
+    public CalculatorStaticProxy(Calculator calculator) {
+        this.calculator = calculator;
+    }
+
+
+    @Override
+    public int add(int i, int j) {
+        // 输出日志
+        System.out.println("[日志] add 方法开始了，参数是：" + i + "," + j);
+        int result = calculator.add(i, j);
+        System.out.println("[日志] add 方法结束了，结果是：" + result);
+        return result;
+    }
+
+    @Override
+    public int sub(int i, int j) {
+        return 0;
+    }
+
+    @Override
+    public int mul(int i, int j) {
+        return 0;
+    }
+
+    @Override
+    public int div(int i, int j) {
+        return 0;
+    }
+}
+```
+```java
+package com.atguigu.spring6.aop.example;
+
+import org.aopalliance.intercept.Invocation;
+
+import java.lang.reflect.InvocationHandler;
+import java.lang.reflect.Method;
+import java.lang.reflect.Proxy;
+
+/**
+ * @Author: Admin
+ * @Create: 2024/7/18 - 上午11:12
+ * @Version: v1.0
+ * ClassName: ProxyFactory
+ * Package: com.atguigu.spring6.aop.example
+ * Description: 动态代理
+ */
+public class ProxyFactory {
+    // 目标对象
+    private Object target;
+
+    public ProxyFactory(Object target) {
+        this.target = target;
+    }
+
+    // 返回代理对象
+    public Object getProxy() {
+        /*
+         * Proxy.newProxyInstance() 有三个参数
+         * 1. ClassLoader 加载动态生成代理类的加载器
+         * 2. Class<?>[] interfaces 目标对象实现的所有接口的 class 类型数组
+         * 3. InvocationHandler 设置代理对象实现目标方法的过程
+         * */
+        ClassLoader classLoader = target.getClass().getClassLoader();
+        Class<?>[] interfaces = target.getClass().getInterfaces();
+
+        InvocationHandler invocationHandler = new InvocationHandler() {
+            /*
+            * 1. 代理对象
+            * 2. 需要重写目标对象的方法
+            * 3. method 方法里面的参数
+            * */
+            @Override
+            public Object invoke(Object proxy, Method method, Object[] args) throws Throwable {
+                // 调用目标方法
+                System.out.println("方法之前----------");
+                Object result = method.invoke(target, args);
+                System.out.println("方法之后----------");
+                return result;
+            }
+        };
+        return Proxy.newProxyInstance(classLoader, interfaces, invocationHandler);
+    }
+}
+```
+```java
+package com.atguigu.spring6.aop.example;
+
+public class TestCalculator {
+    public static void main(String[] args) {
+        CalculatorImpl calculator = new CalculatorImpl();
+        ProxyFactory proxyFactory = new ProxyFactory(calculator);
+        Calculator proxy = (Calculator) proxyFactory.getProxy();
+        proxy.add(1, 2);
+    }
+}
+```
+
+## 5.3 AOP 概念以及相关术语
+## 5.4 基于注解的AOP
+## 5.5基于XML的AOP
 # 6. 但愿色素: JUnit
 # 7. 事务
 # 8. 资源操作: Resources

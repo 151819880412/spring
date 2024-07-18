@@ -2093,6 +2093,7 @@ import java.net.URLDecoder;
 import java.util.Enumeration;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Set;
 
 public class AnnotationApplicationContext implements ApplicationContext {
 
@@ -2118,7 +2119,7 @@ public class AnnotationApplicationContext implements ApplicationContext {
             Enumeration<URL> urls = Thread.currentThread().getContextClassLoader().getResources(packagePath);
             while (urls.hasMoreElements()) {
                 URL url = urls.nextElement();
-                String filePath = URLDecoder.decode(url.getFile(),"utf-8");
+                String filePath = URLDecoder.decode(url.getFile(), "utf-8");
                 System.out.println(filePath);
                 // 获取包前面路径部分,字符串截取
                 rootPath = filePath.substring(0, filePath.length() - packagePath.length());
@@ -2128,7 +2129,7 @@ public class AnnotationApplicationContext implements ApplicationContext {
         } catch (Exception e) {
             throw new RuntimeException(e);
         }
-        //依赖注入
+        // 依赖注入
         loadDi();
     }
 
@@ -2182,28 +2183,63 @@ public class AnnotationApplicationContext implements ApplicationContext {
         }
     }
 
-
     private void loadDi() {
-        for(Map.Entry<Class,Object> entry : beanFactory.entrySet()){
-            //就是咱们放在容器的对象
+        // 实例化对象在 beanFactory 的 map 集合里面
+        // 1. 遍历 beanFactory 的 map 集合
+        // 2. 获取 map 集合的每个对象的 key 每个对象属性获取到
+        // 3. 遍历得到每个对象啊的属性数组,得到每个属性
+        // 4. 判断属性上是否有 @Di 注解
+        // 4.1 如果有私有属性,设置属性可访问
+        // 5. 如果有,就从 beanFactory 集合中获取到对应的对象,设置到属性上
+        Set<Map.Entry<Class, Object>> entries = beanFactory.entrySet();
+        // 1. 遍历 beanFactory 的 map 集合
+        for (Map.Entry<Class, Object> entry : entries) {
+            // 2. 获取 map 集合的每个对象的 key 每个对象属性获取到
             Object obj = entry.getValue();
-            Class<?> aClass = obj.getClass();
-            Field[] declaredFields = aClass.getDeclaredFields();
-            for (Field field : declaredFields){
+            // 获取对象 class
+            Class<?> clazz = obj.getClass();
+            //  获取每个对象属性获取到
+            Field[] declaredFields = clazz.getDeclaredFields();
+            // 3. 遍历得到每个对象啊的属性数组,得到每个属性
+            for (Field field : declaredFields) {
+                // 4. 判断属性上是否有 @Di 注解
                 Di annotation = field.getAnnotation(Di.class);
-                if( annotation != null ){
+                // 如果有私有属性,设置属性可访问
+                if (annotation != null) {
+                    // 4.1 如果有私有属性,设置属性可访问
                     field.setAccessible(true);
+                    // 5. 如果有,就从 beanFactory 集合中获取到对应的对象,设置到属性上
                     try {
-                        System.out.println("正在给【"+obj.getClass().getName()+"】属性【" + field.getName() + "】注入值【"+ beanFactory.get(field.getType()).getClass().getName() +"】");
-                        field.set(obj,beanFactory.get(field.getType()));
+                        System.out.println("正在给【" + obj.getClass().getName() + "】属性【" + field.getName() + "】注入值【" + beanFactory.get(field.getType()).getClass().getName() + "】");
+                        field.set(obj, beanFactory.get(field.getType()));
                     } catch (IllegalAccessException e) {
-                        e.printStackTrace();
+                        throw new RuntimeException(e);
                     }
                 }
             }
         }
+
+        // for(Map.Entry<Class,Object> entry : beanFactory.entrySet()){
+        //     //就是咱们放在容器的对象
+        //     Object obj = entry.getValue();
+        //     Class<?> aClass = obj.getClass();
+        //     Field[] declaredFields = aClass.getDeclaredFields();
+        //     for (Field field : declaredFields){
+        //         Di annotation = field.getAnnotation(Di.class);
+        //         if( annotation != null ){
+        //             field.setAccessible(true);
+        //             try {
+        //                 System.out.println("正在给【"+obj.getClass().getName()+"】属性【" + field.getName() + "】注入值【"+ beanFactory.get(field.getType()).getClass().getName() +"】");
+        //                 field.set(obj,beanFactory.get(field.getType()));
+        //             } catch (IllegalAccessException e) {
+        //                 e.printStackTrace();
+        //             }
+        //         }
+        //     }
+        // }
     }
 }
+
 ```
 ```java
 package com.atguigu;
@@ -2211,9 +2247,9 @@ import com.atguigu.bean.AnnotationApplicationContext;
 import com.atguigu.service.UserService;
 public class TestBean {
     public static void main(String[] args) {
-        AnnotationApplicationContext context = new AnnotationApplicationContext("com.atguigu");
-        UserService userService = (UserService)context.getBean(UserService.class);
-        userService.addUserService();
+            AnnotationApplicationContext context = new AnnotationApplicationContext("com.atguigu");
+            UserService userService = (UserService)context.getBean(UserService.class);
+            userService.addUserService();
     }
 }
 ```
